@@ -1,0 +1,89 @@
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 2px 22px 14px;
+}
+
+.countLabel {
+  font: 600 10px var(--au-font-text);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+  margin: 6px 2px 10px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 16px;
+  padding: 12px 13px;
+  cursor: pointer;
+  text-align: left;
+  width: 100%;
+}
+
+.rowBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.name {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.sub {
+  font: 600 11px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.scoreWrap {
+  text-align: right;
+  flex: none;
+}
+
+.score {
+  font: 700 15px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.scorePts {
+  font: 600 9px var(--au-font-text);
+  color: var(--au-taupe-line);
+  letter-spacing: 0.4px;
+}
+
+.gmv {
+  font: 600 10.5px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 2px;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  font: 500 13px var(--au-font-text);
+  color: var(--au-taupe);
+}

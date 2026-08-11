@@ -1,0 +1,174 @@
+.kicker {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: #c9beb2;
+  margin-top: 14px;
+}
+
+.title {
+  font: 700 22px var(--au-font-display);
+  color: #fff;
+  line-height: 1.1;
+}
+
+.summaryCard {
+  margin-top: 14px;
+  background: rgba(255, 255, 255, 0.08);
+  border-radius: 16px;
+  padding: 14px 15px;
+}
+
+.summaryLabel {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: #c9beb2;
+}
+
+.summaryValue {
+  font: 700 30px var(--au-font-display);
+  color: var(--au-rose);
+  margin-top: 3px;
+  line-height: 1;
+}
+
+.miniStats {
+  display: flex;
+  gap: 10px;
+  margin-top: 14px;
+}
+
+.miniValue {
+  font: 700 15px var(--au-font-display);
+  color: #fff;
+}
+
+.miniLabel {
+  font: 600 8.5px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #c9beb2;
+  margin-top: 2px;
+}
+
+.tabRow {
+  flex: none;
+  padding: 14px 22px 8px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 4px 22px 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.redemptionCard {
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 16px;
+  padding: 11px;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  align-items: center;
+  width: 100%;
+  text-align: left;
+}
+
+.thumb {
+  width: 56px;
+  height: 56px;
+  flex: none;
+}
+
+.redemptionBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.product {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.redemptionMeta {
+  font: 600 10.5px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.redemptionFoot {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  margin-top: 7px;
+}
+
+.cost {
+  font: 700 12px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.chevron {
+  font-size: 18px;
+  color: #c9beb2;
+  flex: none;
+}
+
+.ledgerRow {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 14px;
+  padding: 12px 14px;
+}
+
+.ledgerIcon {
+  width: 34px;
+  height: 34px;
+  border-radius: 10px;
+  flex: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+}
+
+.ledgerBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.ledgerTitle {
+  font: 700 12.5px var(--au-font-display);
+  color: var(--au-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ledgerMeta {
+  font: 600 10.5px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 2px;
+}
+
+.ledgerValue {
+  font: 700 13px var(--au-font-display);
+  flex: none;
+}

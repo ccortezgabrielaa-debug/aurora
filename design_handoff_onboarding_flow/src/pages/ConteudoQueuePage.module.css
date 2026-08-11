@@ -1,0 +1,153 @@
+.header {
+  flex: none;
+  padding: 20px 22px 12px;
+}
+
+.topRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.kicker {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+}
+
+.title {
+  font: 700 22px var(--au-font-display);
+  color: var(--au-ink);
+  line-height: 1.1;
+}
+
+.countWrap {
+  text-align: right;
+}
+
+.count {
+  font: 700 22px var(--au-font-display);
+  color: var(--au-rose-deep);
+  line-height: 1;
+}
+
+.countLabel {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+}
+
+.banner {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  background: #eef3ec;
+  border: 1.5px solid #dbe8d8;
+  border-radius: 12px;
+  padding: 9px 12px;
+  margin-top: 13px;
+}
+
+.bannerText {
+  font: 600 10.5px var(--au-font-text);
+  color: var(--au-success);
+  flex: 1;
+}
+
+.chipsRow {
+  margin-top: 12px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 2px 22px 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-top: 4px;
+}
+
+.card {
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 18px;
+  padding: 11px;
+  cursor: pointer;
+  display: flex;
+  gap: 12px;
+  text-align: left;
+  width: 100%;
+}
+
+.thumb {
+  width: 66px;
+  height: 88px;
+  flex: none;
+}
+
+.cardBody {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+}
+
+.cardTop {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.cardName {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  flex: 1;
+}
+
+.metaRow {
+  font: 600 10px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 6px;
+  display: flex;
+  justify-content: space-between;
+}
+
+.metaCredit {
+  color: var(--au-taupe-soft);
+}
+
+.barTrack {
+  height: 6px;
+  border-radius: 4px;
+  background: var(--au-line);
+  margin-top: 6px;
+  overflow: hidden;
+}
+
+.barFill {
+  height: 100%;
+  border-radius: 4px;
+}
+
+.detectLabel {
+  font: 600 9.5px var(--au-font-text);
+  color: var(--au-taupe-line);
+  margin-top: auto;
+  padding-top: 6px;
+}
+
+.empty {
+  text-align: center;
+  padding: 40px 20px;
+  font: 500 13px var(--au-font-text);
+  color: var(--au-taupe);
+}

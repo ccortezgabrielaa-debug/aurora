@@ -1,0 +1,26 @@
+.wrap {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 13px;
+  padding: 11px 14px;
+}
+
+.icon {
+  font-size: 15px;
+  color: var(--au-taupe-line);
+}
+
+.input {
+  border: none;
+  background: none;
+  flex: 1;
+  font: 500 13px var(--au-font-text);
+  color: var(--au-ink);
+  min-width: 0;
+}
+.input:focus {
+  outline: none;
+}

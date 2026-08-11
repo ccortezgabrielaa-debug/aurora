@@ -1,0 +1,168 @@
+.identityRow {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  margin-top: 14px;
+}
+
+.name {
+  font: 700 16px var(--au-font-display);
+  color: #fff;
+}
+
+.meta {
+  font: 600 11px var(--au-font-text);
+  color: #c9beb2;
+  margin-top: 2px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 14px 22px 8px;
+}
+
+.topRow {
+  display: flex;
+  gap: 14px;
+  align-items: center;
+}
+
+.photo {
+  width: 96px;
+  height: 120px;
+  flex: none;
+}
+
+.product {
+  font: 700 17px var(--au-font-display);
+  color: var(--au-ink);
+  line-height: 1.2;
+}
+
+.variant {
+  font: 600 11px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 5px;
+}
+
+.cost {
+  font: 700 20px var(--au-font-display);
+  color: var(--au-rose-deep);
+  margin-top: 10px;
+}
+
+.costLabel {
+  font: 600 10px var(--au-font-text);
+  color: var(--au-taupe-line);
+  margin-top: 2px;
+}
+
+.sectionLabel {
+  font: 600 10px var(--au-font-text);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+  margin: 16px 2px 9px;
+}
+
+.shipCard {
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 16px;
+  padding: 14px;
+}
+
+.shipName {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.shipAddress {
+  font: 600 11.5px var(--au-font-text);
+  color: #6b6157;
+  margin-top: 5px;
+  line-height: 1.5;
+  white-space: pre-line;
+}
+
+.afterCard {
+  display: flex;
+  justify-content: space-between;
+  background: #faf1f0;
+  border-radius: 14px;
+  padding: 13px 15px;
+  margin-top: 12px;
+}
+
+.afterLabel {
+  font: 600 9.5px var(--au-font-text);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--au-rose-deep);
+}
+
+.afterValue {
+  font: 700 18px var(--au-font-display);
+  color: var(--au-ink);
+  margin-top: 3px;
+}
+
+.prodLabel {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--au-taupe-line);
+  text-align: right;
+}
+
+.prodValue {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-taupe-soft);
+  margin-top: 4px;
+  text-align: right;
+}
+
+.footer {
+  flex: none;
+  padding: 10px 22px 22px;
+  background: var(--au-cream);
+}
+
+.actionsRow {
+  display: flex;
+  gap: 10px;
+}
+
+.declineBtn {
+  flex: none;
+  width: 56px;
+  font: 600 13px var(--au-font-text);
+  text-align: center;
+  padding: 15px 0;
+  border-radius: 15px;
+  background: #f6dcd8;
+  color: #c05a4e;
+  cursor: pointer;
+  border: 0;
+}
+
+.approveBtn {
+  flex: 1;
+  font: 700 14px var(--au-font-text);
+  text-align: center;
+  padding: 15px 0;
+  border-radius: 15px;
+  cursor: pointer;
+  border: 0;
+  color: var(--au-ink);
+  background: #a7d3a5;
+}
+
+.resolvedBox {
+  font: 600 12.5px var(--au-font-text);
+  text-align: center;
+  padding: 15px 0;
+  border-radius: 15px;
+}

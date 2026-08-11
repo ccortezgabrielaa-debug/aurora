@@ -1,0 +1,35 @@
+.bar {
+  flex: none;
+  background: #fff;
+  border-top: 1.5px solid var(--au-line);
+  padding: 10px 20px calc(14px + env(safe-area-inset-bottom, 0px));
+  display: flex;
+  justify-content: space-between;
+  position: sticky;
+  bottom: 0;
+}
+
+.tab {
+  border: 0;
+  background: transparent;
+  cursor: pointer;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+  flex: 1;
+  color: var(--au-taupe-line);
+}
+
+.tab[data-active] {
+  color: var(--au-rose-deep);
+}
+
+.icon {
+  font-size: 19px;
+}
+
+.label {
+  font: 600 9.5px var(--au-font-text);
+  letter-spacing: 0.3px;
+}

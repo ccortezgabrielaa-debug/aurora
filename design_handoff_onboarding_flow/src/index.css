@@ -1,0 +1,111 @@
+@import './styles/tokens.css';
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html,
+body {
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  background: var(--au-cream-deep);
+  color: var(--au-ink);
+  font-family: var(--au-font-text);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  min-height: 100svh;
+}
+
+#root {
+  min-height: 100svh;
+  display: flex;
+  flex-direction: column;
+}
+
+a {
+  color: var(--au-rose-deep);
+  text-decoration: none;
+}
+a:hover {
+  color: #a85f6b;
+}
+
+button {
+  font-family: inherit;
+}
+
+input {
+  font-family: var(--au-font-text);
+}
+input:focus {
+  outline: none;
+  border-color: var(--au-rose);
+}
+input::placeholder {
+  color: var(--au-taupe-line);
+}
+
+img {
+  max-width: 100%;
+  display: block;
+}
+
+.au-scroll {
+  overflow-y: auto;
+  scrollbar-width: none;
+}
+.au-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  white-space: nowrap;
+}
+
+@keyframes auEnter {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@keyframes auFade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes auPop {
+  from {
+    opacity: 0;
+    transform: scale(0.9);
+  }
+  to {
+    opacity: 1;
+    transform: none;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+  }
+}

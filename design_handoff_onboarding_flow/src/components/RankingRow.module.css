@@ -1,0 +1,80 @@
+.row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 16px;
+  padding: 11px 13px;
+}
+
+.rank {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-taupe-line);
+  width: 14px;
+  text-align: center;
+  flex: none;
+}
+
+.avatar {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font: 600 14px var(--au-font-display);
+  color: #fff;
+  flex: none;
+}
+
+.body {
+  flex: 1;
+  min-width: 0;
+}
+
+.nameRow {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.name {
+  font: 700 14px var(--au-font-display);
+  color: var(--au-ink);
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.tier {
+  font: 600 8.5px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  padding: 2px 6px;
+  border-radius: 6px;
+  flex: none;
+}
+
+.sub {
+  font: 500 11.5px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 2px;
+}
+
+.scoreWrap {
+  text-align: right;
+  flex: none;
+}
+
+.score {
+  font: 700 16px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.scoreLabel {
+  font: 600 8.5px var(--au-font-text);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe-line);
+}

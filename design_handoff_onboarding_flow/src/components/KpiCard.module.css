@@ -1,0 +1,38 @@
+.card {
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 18px;
+  padding: 15px 15px 14px;
+}
+
+.label {
+  font: 600 9.5px var(--au-font-text);
+  letter-spacing: 0.6px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+}
+
+.value {
+  font: 700 30px/1 var(--au-font-display);
+  color: var(--au-ink);
+  margin-top: 9px;
+  white-space: nowrap;
+}
+
+.value[data-size='sm'] {
+  font-size: 21px;
+  margin-top: 11px;
+}
+
+.delta {
+  font: 600 11px var(--au-font-text);
+  margin-top: 6px;
+}
+
+.delta[data-tone='up'] {
+  color: var(--au-success);
+}
+
+.delta[data-tone='muted'] {
+  color: var(--au-taupe);
+}

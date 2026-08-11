@@ -1,0 +1,31 @@
+.stage {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: stretch;
+  background: var(--au-cream-deep);
+}
+
+.frame {
+  position: relative;
+  width: 100%;
+  max-width: 440px;
+  min-height: 100svh;
+  background: var(--au-cream);
+  display: flex;
+  flex-direction: column;
+}
+
+@media (min-width: 640px) {
+  .stage {
+    align-items: center;
+    padding: 40px 16px;
+  }
+  .frame {
+    min-height: min(800px, calc(100svh - 80px));
+    height: min(800px, calc(100svh - 80px));
+    border-radius: 32px;
+    overflow: hidden;
+    box-shadow: 0 40px 90px -40px rgba(28, 26, 24, 0.35);
+  }
+}

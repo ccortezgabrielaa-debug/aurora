@@ -1,0 +1,127 @@
+.header {
+  flex: none;
+  padding: 14px 22px 12px;
+}
+
+.topRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+}
+
+.titleGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.kicker {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+}
+
+.title {
+  font: 700 22px var(--au-font-display);
+  color: var(--au-ink);
+  line-height: 1.1;
+}
+
+.tabRow {
+  margin-top: 14px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 2px 22px 14px;
+}
+
+.list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  margin-top: 4px;
+}
+
+.couponRow,
+.saleRow {
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 15px;
+  padding: 13px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+.couponBody,
+.saleBody {
+  flex: 1;
+  min-width: 0;
+}
+
+.codeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.code {
+  font: 700 14px var(--au-font-display);
+  color: var(--au-ink);
+  letter-spacing: 0.3px;
+}
+
+.dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+}
+
+.couponMeta,
+.saleMeta {
+  font: 600 10.5px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 3px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.usesWrap {
+  text-align: right;
+  flex: none;
+}
+
+.uses {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.usesLabel {
+  font: 600 8.5px var(--au-font-text);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--au-taupe-line);
+}
+
+.saleValue {
+  font: 700 14px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.saleCredit {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-success);
+  text-align: right;
+}
+
+.saleRate {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 0.3px;
+  text-transform: uppercase;
+  color: var(--au-taupe-line);
+  text-align: right;
+}

@@ -1,0 +1,150 @@
+.identityRow {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 14px;
+}
+
+.name {
+  font: 700 21px var(--au-font-display);
+  color: #fff;
+}
+
+.handle {
+  font: 600 11.5px var(--au-font-text);
+  color: #c9beb2;
+  margin-top: 3px;
+}
+
+.statTiles {
+  display: flex;
+  gap: 10px;
+  margin-top: 16px;
+}
+
+.statTile {
+  flex: 1;
+  background: rgba(255, 255, 255, 0.09);
+  border-radius: 14px;
+  padding: 11px 12px;
+}
+
+.statValue {
+  font: 700 18px var(--au-font-display);
+  color: #fff;
+}
+
+.statValue[data-accent] {
+  color: var(--au-rose);
+}
+
+.statLabel {
+  font: 600 8.5px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #c9beb2;
+  margin-top: 2px;
+}
+
+.editLink {
+  font: 600 12px var(--au-font-text);
+  color: var(--au-rose);
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+
+.tabRow {
+  flex: none;
+  padding: 14px 22px 8px;
+}
+
+.body {
+  flex: 1;
+  min-height: 0;
+  padding: 4px 22px 20px;
+}
+
+.rowList {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+.saleRow,
+.contentCard,
+.ledgerRow {
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 14px;
+  padding: 13px 14px;
+}
+
+.saleRow,
+.ledgerRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.saleValue,
+.ledgerSource {
+  font: 700 14px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.saleMeta,
+.ledgerMeta {
+  font: 600 11px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 2px;
+}
+
+.saleCredit,
+.ledgerValue {
+  font: 700 13px var(--au-font-display);
+  text-align: right;
+}
+
+.saleCreditLabel {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: var(--au-taupe-line);
+  text-align: right;
+}
+
+.ledgerStatus {
+  font: 600 8.5px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  text-align: right;
+}
+
+.contentTop {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.contentTypeRow {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.contentType {
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.contentCredit {
+  font: 700 12px var(--au-font-display);
+  color: var(--au-success);
+}
+
+.contentMeta {
+  font: 600 11px var(--au-font-text);
+  color: var(--au-taupe);
+  margin-top: 6px;
+}
