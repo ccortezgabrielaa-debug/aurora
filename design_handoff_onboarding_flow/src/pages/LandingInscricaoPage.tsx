@@ -89,7 +89,11 @@ export function LandingInscricaoPage() {
             </div>
           </div>
           <div className={styles.heroImage}>
-            <MediaPlaceholder label="Foto editorial da campanha" radius={26} />
+            <img
+              src="/hero-embaixadoras.jpg"
+              alt="Três embaixadoras Niya sorrindo lado a lado, com pele radiante e maquiagem natural"
+              className={styles.heroImg}
+            />
           </div>
         </div>
 
