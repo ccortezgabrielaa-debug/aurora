@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { AuroraMark } from '../components/AuroraMark';
 import { SegmentedControl } from '../components/SegmentedControl';
@@ -31,6 +31,7 @@ const ROLE_COPY: Record<
 };
 
 export function LoginPage() {
+  const navigate = useNavigate();
   const [role, setRole] = useState<Role>('marca');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
@@ -70,6 +71,7 @@ export function LoginPage() {
           className={styles.form}
           onSubmit={(e) => {
             e.preventDefault();
+            navigate(isMarca ? '/dashboard' : '/portal');
           }}
         >
           <input
@@ -112,10 +114,7 @@ export function LoginPage() {
             </>
           ) : (
             <>
-              Recebeu um convite?{' '}
-              <span className={styles.footerLinkDisabled} title="Disponível em breve">
-                Inscreva-se
-              </span>
+              Recebeu um convite? <Link to="/inscricao">Inscreva-se</Link>
             </>
           )}
         </div>

@@ -1,11 +1,12 @@
 import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { SegmentedControl } from '../components/SegmentedControl';
 import { KpiCard } from '../components/KpiCard';
 import { RankingRow } from '../components/RankingRow';
-import { BottomTabBar } from '../components/BottomTabBar';
+import { MarcaTabBar } from '../components/MarcaTabBar';
 import { useOnboarding } from '../context/OnboardingContext';
-import { DASHBOARD_TABS, PERIOD_DATA, PERIOD_LABELS, RANKING, type Period } from '../data/dashboardData';
+import { PERIOD_DATA, PERIOD_LABELS, RANKING, type Period } from '../data/dashboardData';
 import styles from './DashboardPage.module.css';
 
 const PERIOD_OPTIONS = (Object.keys(PERIOD_LABELS) as Period[]).map((value) => ({
@@ -13,10 +14,16 @@ const PERIOD_OPTIONS = (Object.keys(PERIOD_LABELS) as Period[]).map((value) => (
   label: PERIOD_LABELS[value],
 }));
 
+const QUICK_LINKS = [
+  { label: 'Cupons & Vendas', icon: '↑', path: '/cupons-e-vendas', bg: '#e3efe1', fg: '#5a8f6a' },
+  { label: 'Social Listening', icon: '⟲', path: '/social-listening', bg: '#faf1f0', fg: '#c67d88' },
+  { label: 'Regras', icon: '⚙', path: '/regras', bg: '#efe7dc', fg: '#8c7d70' },
+];
+
 export function DashboardPage() {
   const { state } = useOnboarding();
+  const navigate = useNavigate();
   const [period, setPeriod] = useState<Period>('30d');
-  const [activeTab, setActiveTab] = useState('Início');
   const k = PERIOD_DATA[period];
   const brandInitial = (state.brand.trim()[0] || 'A').toUpperCase();
 
@@ -71,7 +78,7 @@ export function DashboardPage() {
 
         <div className={styles.sectionHead}>
           <div className={styles.sectionTitle}>Ranking por pontuação</div>
-          <button type="button" className={styles.sectionLink}>
+          <button type="button" className={styles.sectionLink} onClick={() => navigate('/embaixadoras')}>
             Ver tudo
           </button>
         </div>
@@ -80,9 +87,28 @@ export function DashboardPage() {
             <RankingRow key={a.handle} rank={i + 1} ambassador={a} />
           ))}
         </div>
+
+        <div className={styles.sectionHead}>
+          <div className={styles.sectionTitle}>Acessos rápidos</div>
+        </div>
+        <div className={styles.quickLinks}>
+          {QUICK_LINKS.map((q) => (
+            <button
+              key={q.path}
+              type="button"
+              className={styles.quickLink}
+              onClick={() => navigate(q.path)}
+            >
+              <span className={styles.quickLinkIcon} style={{ background: q.bg, color: q.fg }}>
+                {q.icon}
+              </span>
+              {q.label}
+            </button>
+          ))}
+        </div>
       </div>
 
-      <BottomTabBar tabs={DASHBOARD_TABS} active={activeTab} onChange={setActiveTab} />
+      <MarcaTabBar />
     </Screen>
   );
 }

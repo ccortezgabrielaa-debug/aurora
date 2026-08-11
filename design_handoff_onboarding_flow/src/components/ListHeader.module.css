@@ -1,0 +1,32 @@
+.header {
+  flex: none;
+  padding: 20px 22px 12px;
+}
+
+.topRow {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 12px;
+}
+
+.kicker {
+  font: 600 9px var(--au-font-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+}
+
+.title {
+  font: 700 22px var(--au-font-display);
+  color: var(--au-ink);
+  line-height: 1.1;
+  margin-top: 1px;
+}
+
+.rest {
+  margin-top: 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+}

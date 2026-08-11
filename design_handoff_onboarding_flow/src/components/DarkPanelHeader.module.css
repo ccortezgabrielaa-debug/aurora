@@ -1,0 +1,20 @@
+.panel {
+  flex: none;
+  padding: 14px 22px 18px;
+  background: var(--au-ink);
+  color: var(--au-cream);
+  border-radius: 0 0 26px 26px;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  font: 600 11px var(--au-font-text);
+  letter-spacing: 0.4px;
+  text-transform: uppercase;
+  color: #c9beb2;
+}

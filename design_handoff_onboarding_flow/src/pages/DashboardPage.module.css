@@ -173,3 +173,34 @@
   flex-direction: column;
   gap: 9px;
 }
+
+.quickLinks {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.quickLink {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  background: #fff;
+  border: 1.5px solid var(--au-line);
+  border-radius: 14px;
+  padding: 12px 14px;
+  cursor: pointer;
+  font: 700 13px var(--au-font-display);
+  color: var(--au-ink);
+  text-align: left;
+}
+
+.quickLinkIcon {
+  width: 32px;
+  height: 32px;
+  border-radius: 10px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 15px;
+  flex: none;
+}

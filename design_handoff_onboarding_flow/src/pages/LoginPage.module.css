@@ -124,8 +124,3 @@
   font: 500 12.5px var(--au-font-text);
   color: var(--au-taupe-soft);
 }
-
-.footerLinkDisabled {
-  color: var(--au-taupe-line);
-  cursor: default;
-}
