@@ -8,7 +8,9 @@ import { MediaPlaceholder } from '../components/MediaPlaceholder';
 import { MarcaTabBar } from '../components/MarcaTabBar';
 import { ToastView } from '../components/Toast';
 import { useContentQueue } from '../context/ContentQueueContext';
-import { CONTENT_QUEUE, CONTENT_STATUS_META } from '../data/contentQueue';
+import { STATUS_META, type DerivedStatus } from '../lib/queries/content';
+import { initials } from '../data/ambassadors';
+import { avatarColorFor } from '../lib/avatarColor';
 import styles from './ConteudoQueuePage.module.css';
 
 type Filter = 'Monitorando' | 'Validados' | 'Falhas' | 'Todos';
@@ -18,7 +20,7 @@ const FILTER_OPTIONS: { value: Filter; label: string }[] = [
   { value: 'Falhas', label: 'Falhas' },
   { value: 'Todos', label: 'Todos' },
 ];
-const FILTER_MAP: Record<Filter, string[] | null> = {
+const FILTER_MAP: Record<Filter, DerivedStatus[] | null> = {
   Monitorando: ['monitorando'],
   Validados: ['validado'],
   Falhas: ['removido', 'revisar'],
@@ -27,15 +29,13 @@ const FILTER_MAP: Record<Filter, string[] | null> = {
 
 export function ConteudoQueuePage() {
   const navigate = useNavigate();
-  const { statusFor, toast } = useContentQueue();
+  const { items, toast } = useContentQueue();
   const [filter, setFilter] = useState<Filter>('Monitorando');
 
-  const enriched = CONTENT_QUEUE.map((item, idx) => ({ item, idx, status: statusFor(idx) }));
-  const monitorCount = enriched.filter((e) => e.status === 'monitorando').length;
-  const connectedCount = enriched.filter((e) => e.item.connected).length;
+  const monitorCount = items?.filter((e) => e.status === 'monitorando').length ?? 0;
 
   const allowed = FILTER_MAP[filter];
-  const queue = enriched.filter((e) => allowed === null || allowed.includes(e.status));
+  const queue = (items ?? []).filter((e) => allowed === null || allowed.includes(e.status));
 
   return (
     <Screen>
@@ -52,7 +52,7 @@ export function ConteudoQueuePage() {
         </div>
         <div className={styles.banner}>
           <span aria-hidden="true">⟲</span>
-          <span className={styles.bannerText}>Detecção via Instagram ativa · {connectedCount} contas</span>
+          <span className={styles.bannerText}>Detecção via Instagram ativa</span>
         </div>
         <div className={styles.chipsRow}>
           <FilterChips ariaLabel="Filtrar conteúdo" options={FILTER_OPTIONS} value={filter} onChange={setFilter} />
@@ -60,36 +60,39 @@ export function ConteudoQueuePage() {
       </header>
 
       <div className={`au-scroll ${styles.body}`}>
+        {items === null && (
+          <div style={{ padding: '40px 0', textAlign: 'center', color: 'var(--au-taupe)', font: '600 13px var(--au-font-text)' }}>
+            Carregando…
+          </div>
+        )}
         <div className={styles.list}>
-          {queue.map(({ item, idx, status }) => {
-            const meta = CONTENT_STATUS_META[status];
+          {queue.map((item) => {
+            const meta = STATUS_META[item.status];
             return (
-              <button key={idx} type="button" className={styles.card} onClick={() => navigate(`/conteudo/${idx}`)}>
+              <button key={item.row.id} type="button" className={styles.card} onClick={() => navigate(`/conteudo/${item.row.id}`)}>
                 <div className={styles.thumb}>
-                  <MediaPlaceholder label="mídia" radius={12} badge={item.type} />
+                  <MediaPlaceholder label="mídia" radius={12} badge={item.row.content_type} />
                 </div>
                 <div className={styles.cardBody}>
                   <div className={styles.cardTop}>
-                    <Avatar initials={item.initials} bg={item.avatarBg} size={24} />
-                    <span className={styles.cardName}>{item.name}</span>
+                    <Avatar initials={initials(item.ambassadorName)} bg={avatarColorFor(item.ambassadorId)} size={24} />
+                    <span className={styles.cardName}>{item.ambassadorName}</span>
                     <StatusBadge label={meta.label} bg={meta.bg} fg={meta.fg} />
                   </div>
                   <div className={styles.metaRow}>
                     <span>{item.elapsedLabel}</span>
-                    <span className={styles.metaCredit}>+ R$ {item.credit}</span>
+                    <span className={styles.metaCredit}>+ R$ {Math.round(Number(item.row.credit_generated))}</span>
                   </div>
                   <div className={styles.barTrack}>
                     <div className={styles.barFill} style={{ width: `${item.pct}%`, background: meta.bar }} />
                   </div>
-                  <div className={styles.detectLabel}>
-                    {item.brand ? `✓ marca · ✓ ${item.coupon}` : '⚠ marca não marcada'}
-                  </div>
+                  <div className={styles.detectLabel}>{item.detectLabel}</div>
                 </div>
               </button>
             );
           })}
         </div>
-        {queue.length === 0 && <div className={styles.empty}>Nada neste filtro.</div>}
+        {items !== null && queue.length === 0 && <div className={styles.empty}>Nada neste filtro.</div>}
       </div>
 
       <MarcaTabBar />

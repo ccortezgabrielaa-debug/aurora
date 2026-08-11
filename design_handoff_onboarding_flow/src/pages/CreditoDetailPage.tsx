@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { DarkPanelHeader, BackRow } from '../components/DarkPanelHeader';
@@ -5,34 +6,57 @@ import { Avatar } from '../components/Avatar';
 import { MediaPlaceholder } from '../components/MediaPlaceholder';
 import { ToastView } from '../components/Toast';
 import { useCredit } from '../context/CreditContext';
-import { REDEMPTIONS } from '../data/credit';
+import { fetchAmbassadorBalance, fetchRedemption, setRedemptionStatus, type RedemptionItem } from '../lib/queries/credit';
+import { formatBRLFull } from '../lib/format';
+import { initials } from '../data/ambassadors';
+import { avatarColorFor } from '../lib/avatarColor';
 import styles from './CreditoDetailPage.module.css';
 
 export function CreditoDetailPage() {
-  const { idx: idxParam } = useParams<{ idx: string }>();
+  const { idx: id } = useParams<{ idx: string }>();
   const navigate = useNavigate();
-  const { statusFor, setStatus, toast, flash } = useCredit();
+  const { reload, flash, toast } = useCredit();
+  const [redemption, setRedemption] = useState<RedemptionItem | null | undefined>(undefined);
+  const [balance, setBalance] = useState<number | null>(null);
+  const [busy, setBusy] = useState(false);
 
-  const idx = Number(idxParam);
-  const r = REDEMPTIONS[idx];
-  if (!r) return <Navigate to="/credito" replace />;
+  useEffect(() => {
+    if (!id) return;
+    fetchRedemption(id).then((r) => {
+      setRedemption(r);
+      if (r) fetchAmbassadorBalance(r.ambassador_id).then(setBalance);
+    });
+  }, [id]);
 
-  const status = statusFor(idx);
-  const showActions = status === 'solicitado';
-  const showResolved = !showActions;
-  const resolvedLabel = status === 'enviado' ? '✓ Peça aprovada e enviada' : '✕ Resgate recusado';
-  const resolvedFg = status === 'enviado' ? '#5a8f6a' : '#c05a4e';
-  const resolvedBg = status === 'enviado' ? '#e3efe1' : '#f6dcd8';
-
-  function approve() {
-    setStatus(idx, 'enviado');
-    flash(`${r.product} → ${r.name} · enviado`, '✓');
-    navigate('/credito');
+  if (redemption === null) return <Navigate to="/credito" replace />;
+  if (redemption === undefined) {
+    return (
+      <Screen>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--au-taupe)', font: '600 13px var(--au-font-text)' }}>
+          Carregando…
+        </div>
+      </Screen>
+    );
   }
 
-  function decline() {
-    setStatus(idx, 'recusado');
-    flash(`Resgate de ${r.name} recusado`, '✕');
+  const r = redemption;
+  const showActions = r.status === 'solicitado';
+  const showResolved = !showActions;
+  const resolvedLabel = r.status === 'enviado' ? '✓ Peça aprovada e enviada' : '✕ Resgate recusado';
+  const resolvedFg = r.status === 'enviado' ? '#5a8f6a' : '#c05a4e';
+  const resolvedBg = r.status === 'enviado' ? '#e3efe1' : '#f6dcd8';
+  const afterBalance = balance !== null ? balance - Number(r.amount_deducted) : null;
+
+  async function updateStatus(status: 'enviado' | 'recusado') {
+    setBusy(true);
+    const { error } = await setRedemptionStatus(r.id, status);
+    setBusy(false);
+    if (error) {
+      flash('Erro: ' + error, '✕');
+      return;
+    }
+    flash(status === 'enviado' ? `${r.item_redeemed} → ${r.ambassadorName} · enviado` : `Resgate de ${r.ambassadorName} recusado`, status === 'enviado' ? '✓' : '✕');
+    await reload();
     navigate('/credito');
   }
 
@@ -41,11 +65,11 @@ export function CreditoDetailPage() {
       <DarkPanelHeader>
         <BackRow onBack={() => navigate('/credito')} backLabel="Voltar" title="Resgate" />
         <div className={styles.identityRow}>
-          <Avatar initials={r.initials} bg={r.avatarBg} size={40} />
+          <Avatar initials={initials(r.ambassadorName)} bg={avatarColorFor(r.ambassador_id)} size={40} />
           <div>
-            <div className={styles.name}>{r.name}</div>
+            <div className={styles.name}>{r.ambassadorName}</div>
             <div className={styles.meta}>
-              saldo {r.balance} · solicitado {r.date}
+              saldo {balance !== null ? formatBRLFull(balance) : '—'} · solicitado {r.redeemed_at}
             </div>
           </div>
         </div>
@@ -57,38 +81,44 @@ export function CreditoDetailPage() {
             <MediaPlaceholder label="peça" radius={16} />
           </div>
           <div style={{ flex: 1 }}>
-            <div className={styles.product}>{r.product}</div>
-            <div className={styles.variant}>{r.variant}</div>
-            <div className={styles.cost}>{r.cost}</div>
+            <div className={styles.product}>{r.item_redeemed}</div>
+            {r.variant && <div className={styles.variant}>{r.variant}</div>}
+            <div className={styles.cost}>{formatBRLFull(Number(r.amount_deducted))}</div>
             <div className={styles.costLabel}>em crédito</div>
           </div>
         </div>
 
-        <div className={styles.sectionLabel}>Envio</div>
-        <div className={styles.shipCard}>
-          <div className={styles.shipName}>{r.name}</div>
-          <div className={styles.shipAddress}>{r.address}</div>
-        </div>
+        {r.shipping_address && (
+          <>
+            <div className={styles.sectionLabel}>Envio</div>
+            <div className={styles.shipCard}>
+              <div className={styles.shipName}>{r.ambassadorName}</div>
+              <div className={styles.shipAddress}>{r.shipping_address}</div>
+            </div>
+          </>
+        )}
 
         <div className={styles.afterCard}>
           <div>
             <div className={styles.afterLabel}>Saldo após resgate</div>
-            <div className={styles.afterValue}>{r.afterBalance}</div>
+            <div className={styles.afterValue}>{afterBalance !== null ? formatBRLFull(afterBalance) : '—'}</div>
           </div>
-          <div>
-            <div className={styles.prodLabel}>custo de produção</div>
-            <div className={styles.prodValue}>{r.prodCost}</div>
-          </div>
+          {r.production_cost !== null && (
+            <div>
+              <div className={styles.prodLabel}>custo de produção</div>
+              <div className={styles.prodValue}>{formatBRLFull(Number(r.production_cost))}</div>
+            </div>
+          )}
         </div>
       </div>
 
       <div className={styles.footer}>
         {showActions && (
           <div className={styles.actionsRow}>
-            <button type="button" className={styles.declineBtn} onClick={decline}>
+            <button type="button" className={styles.declineBtn} onClick={() => updateStatus('recusado')} disabled={busy}>
               ✕
             </button>
-            <button type="button" className={styles.approveBtn} onClick={approve}>
+            <button type="button" className={styles.approveBtn} onClick={() => updateStatus('enviado')} disabled={busy}>
               Aprovar e enviar peça
             </button>
           </div>

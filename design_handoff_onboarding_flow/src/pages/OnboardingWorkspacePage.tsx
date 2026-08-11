@@ -1,19 +1,64 @@
-import { useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { Navigate, useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { StepDots } from '../components/StepDots';
 import { LogoUploader } from '../components/LogoUploader';
 import { ColorSwatchPicker } from '../components/ColorSwatchPicker';
 import { useOnboarding } from '../context/OnboardingContext';
+import { useAuth } from '../context/AuthContext';
+import { supabase } from '../lib/supabase';
 import styles from './OnboardingStep.module.css';
 
 const BRAND_SWATCHES = ['#eab4bf', '#c98a94', '#b5c4b0', '#c9b79a', '#26211e'];
 
 export function OnboardingWorkspacePage() {
   const navigate = useNavigate();
+  const { session, loading: authLoading } = useAuth();
   const { state, setBrand, setColor, setLogoUrl } = useOnboarding();
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleSubmit(e: React.FormEvent) {
+  if (!authLoading && !session) {
+    return <Navigate to="/onboarding/signup" replace />;
+  }
+
+  async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
+    if (!session) return;
+    if (!state.brand.trim()) return;
+
+    setSubmitting(true);
+    setError(null);
+
+    // Generated client-side (rather than left to the DB default + `.select()`-ing it back)
+    // because a brand-new user has no profile yet, so no SELECT policy on `brands` can see
+    // the row it just inserted — RLS still lets the INSERT through, but RETURNING it fails.
+    const brandId = crypto.randomUUID();
+    const { error: brandError } = await supabase.from('brands').insert({ id: brandId, name: state.brand.trim() });
+
+    if (brandError) {
+      setSubmitting(false);
+      setError('Não foi possível criar o workspace: ' + brandError.message);
+      return;
+    }
+
+    const { error: profileError } = await supabase.from('profiles').insert({
+      id: session.user.id,
+      role: 'brand_admin',
+      brand_id: brandId,
+      full_name: state.name.trim() || null,
+    });
+
+    if (profileError) {
+      setSubmitting(false);
+      setError('Workspace criado, mas houve um erro ao vincular sua conta: ' + profileError.message);
+      return;
+    }
+
+    // All-default row so Regras has something to load/edit from day one.
+    await supabase.from('credit_rules').insert({ brand_id: brandId });
+
+    setSubmitting(false);
     navigate('/onboarding/done');
   }
 
@@ -79,10 +124,12 @@ export function OnboardingWorkspacePage() {
           </div>
         </div>
 
+        {error && <p className={styles.fieldError}>{error}</p>}
+
         <div className={styles.spacer} />
 
-        <button type="submit" className={styles.primaryBtn}>
-          Criar workspace
+        <button type="submit" className={styles.primaryBtn} disabled={submitting}>
+          {submitting ? 'Criando workspace…' : 'Criar workspace'}
         </button>
       </form>
     </Screen>

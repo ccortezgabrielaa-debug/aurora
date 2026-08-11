@@ -30,11 +30,6 @@
   flex: none;
 }
 
-.avatarImg {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-}
 
 .kicker {
   font: 600 9px var(--au-font-text);

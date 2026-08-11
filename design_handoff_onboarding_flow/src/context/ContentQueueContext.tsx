@@ -1,10 +1,10 @@
-import { createContext, useContext, useMemo, useState, type ReactNode } from 'react';
-import { CONTENT_QUEUE, type ContentQueueStatus } from '../data/contentQueue';
+import { createContext, useCallback, useContext, useEffect, useMemo, useState, type ReactNode } from 'react';
+import { fetchContentQueue, type ContentQueueItem } from '../lib/queries/content';
 import { useToast } from '../components/Toast';
 
 type ContentQueueContextValue = {
-  statusFor: (idx: number) => ContentQueueStatus;
-  setStatus: (idx: number, status: ContentQueueStatus) => void;
+  items: ContentQueueItem[] | null;
+  reload: () => Promise<void>;
   toast: ReturnType<typeof useToast>['toast'];
   flash: ReturnType<typeof useToast>['flash'];
 };
@@ -12,18 +12,19 @@ type ContentQueueContextValue = {
 const ContentQueueContext = createContext<ContentQueueContextValue | null>(null);
 
 export function ContentQueueProvider({ children }: { children: ReactNode }) {
-  const [overrides, setOverrides] = useState<Record<number, ContentQueueStatus>>({});
+  const [items, setItems] = useState<ContentQueueItem[] | null>(null);
   const { toast, flash } = useToast();
 
-  const value = useMemo<ContentQueueContextValue>(
-    () => ({
-      statusFor: (idx) => overrides[idx] ?? CONTENT_QUEUE[idx].status,
-      setStatus: (idx, status) => setOverrides((o) => ({ ...o, [idx]: status })),
-      toast,
-      flash,
-    }),
-    [overrides, toast, flash],
-  );
+  const reload = useCallback(async () => {
+    const data = await fetchContentQueue();
+    setItems(data);
+  }, []);
+
+  useEffect(() => {
+    reload();
+  }, [reload]);
+
+  const value = useMemo<ContentQueueContextValue>(() => ({ items, reload, toast, flash }), [items, reload, toast, flash]);
 
   return <ContentQueueContext.Provider value={value}>{children}</ContentQueueContext.Provider>;
 }

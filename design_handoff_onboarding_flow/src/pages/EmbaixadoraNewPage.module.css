@@ -1,0 +1,105 @@
+.body {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 4px 22px 14px;
+}
+
+.field {
+  margin-bottom: 16px;
+}
+
+.fieldLabel {
+  font: 600 10px var(--au-font-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+  margin-bottom: 6px;
+  display: block;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1.5px solid var(--au-sand-border);
+  border-radius: 14px;
+  padding: 14px 15px;
+  font: 500 14px var(--au-font-text);
+  color: var(--au-ink);
+}
+
+.levelRow {
+  display: flex;
+  gap: 8px;
+}
+
+.levelChip {
+  flex: 1;
+  text-align: center;
+  font: 600 12px var(--au-font-text);
+  padding: 10px 0;
+  border-radius: 11px;
+  cursor: pointer;
+  border: 1.5px solid var(--au-line);
+  background: #fff;
+  color: var(--au-taupe-soft);
+}
+.levelChip[data-active] {
+  color: #fff;
+  background: var(--au-ink);
+  border-color: var(--au-ink);
+}
+
+.error {
+  font: 600 12px var(--au-font-text);
+  color: #c96a5e;
+  margin-top: 4px;
+}
+
+.footer {
+  flex: none;
+  padding: 10px 22px 22px;
+  background: var(--au-cream);
+}
+
+.submitBtn {
+  width: 100%;
+  font: 700 15px var(--au-font-text);
+  text-align: center;
+  padding: 16px;
+  border-radius: 15px;
+  border: 0;
+  cursor: pointer;
+  color: var(--au-ink);
+  background: var(--au-rose);
+}
+
+.doneWrap {
+  padding: 20px 4px;
+}
+
+.doneTitle {
+  font: 700 18px var(--au-font-display);
+  color: var(--au-ink);
+}
+
+.doneCard {
+  background: #faf1f0;
+  border-radius: 16px;
+  padding: 16px;
+  margin-top: 14px;
+}
+
+.doneLabel {
+  font: 600 9.5px var(--au-font-text);
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  color: var(--au-rose-deep);
+}
+
+.doneValue {
+  font: 700 15px var(--au-font-display);
+  color: var(--au-ink);
+  margin-top: 3px;
+}

@@ -69,6 +69,13 @@
   gap: 10px;
 }
 
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  font: 500 13px var(--au-font-text);
+  color: var(--au-taupe);
+}
+
 .redemptionCard {
   background: #fff;
   border: 1.5px solid var(--au-line);

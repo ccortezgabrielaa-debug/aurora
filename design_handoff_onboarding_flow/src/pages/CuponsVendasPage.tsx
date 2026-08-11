@@ -4,7 +4,8 @@ import { Screen } from '../components/Screen';
 import { IconButton } from '../components/IconButton';
 import { PillSubTabs } from '../components/PillSubTabs';
 import { ToastView, useToast } from '../components/Toast';
-import { COUPONS, COUPON_STATUS_DOT, SALES_HISTORY } from '../data/coupons';
+import { formatBRLFull } from '../lib/format';
+import { fetchCouponsWithAmbassadors, fetchSalesHistory, type CouponWithAmbassador, type SaleHistoryItem } from '../lib/queries/coupons';
 import styles from './CuponsVendasPage.module.css';
 
 type SubTab = 'cupons' | 'vendas';
@@ -14,12 +15,21 @@ export function CuponsVendasPage() {
   const location = useLocation();
   const [subtab, setSubtab] = useState<SubTab>('cupons');
   const { toast, flash } = useToast();
+  const [coupons, setCoupons] = useState<CouponWithAmbassador[] | null>(null);
+  const [sales, setSales] = useState<SaleHistoryItem[] | null>(null);
+
+  useEffect(() => {
+    fetchCouponsWithAmbassadors().then(setCoupons);
+    fetchSalesHistory().then(setSales);
+  }, []);
 
   useEffect(() => {
     const state = location.state as { toastMessage?: string; toastIcon?: string; subtab?: SubTab } | null;
     if (state?.toastMessage) {
       flash(state.toastMessage, state.toastIcon ?? '✓');
       if (state.subtab) setSubtab(state.subtab);
+      fetchCouponsWithAmbassadors().then(setCoupons);
+      fetchSalesHistory().then(setSales);
       navigate(location.pathname, { replace: true, state: null });
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
@@ -58,15 +68,16 @@ export function CuponsVendasPage() {
       <div className={`au-scroll ${styles.body}`}>
         {subtab === 'cupons' && (
           <div className={styles.list}>
-            {COUPONS.map((c) => (
-              <div key={c.code} className={styles.couponRow}>
+            {coupons === null && <div className={styles.loading}>Carregando…</div>}
+            {coupons?.map((c) => (
+              <div key={c.couponId} className={styles.couponRow}>
                 <div className={styles.couponBody}>
                   <div className={styles.codeRow}>
                     <span className={styles.code}>{c.code}</span>
-                    <span className={styles.dot} style={{ background: COUPON_STATUS_DOT[c.status] }} />
+                    <span className={styles.dot} style={{ background: c.ambassadorStatus === 'active' ? '#5aa06a' : '#c3b8ac' }} />
                   </div>
                   <div className={styles.couponMeta}>
-                    {c.name} · {c.shop}
+                    {c.ambassadorName} · {c.shop ?? 'sem loja vinculada'}
                   </div>
                 </div>
                 <div className={styles.usesWrap}>
@@ -75,27 +86,30 @@ export function CuponsVendasPage() {
                 </div>
               </div>
             ))}
+            {coupons?.length === 0 && <div className={styles.loading}>Nenhum cupom ainda.</div>}
           </div>
         )}
 
         {subtab === 'vendas' && (
           <div className={styles.list}>
-            {SALES_HISTORY.map((s, i) => (
-              <div key={i} className={styles.saleRow}>
+            {sales === null && <div className={styles.loading}>Carregando…</div>}
+            {sales?.map((s) => (
+              <div key={s.id} className={styles.saleRow}>
                 <div className={styles.saleBody}>
-                  <div className={styles.saleValue}>{s.value}</div>
+                  <div className={styles.saleValue}>{formatBRLFull(s.value)}</div>
                   <div className={styles.saleMeta}>
-                    {s.date} · {s.code} · {s.name}
+                    {s.date} · {s.code} · {s.ambassadorName}
                   </div>
                 </div>
                 <div>
-                  <div className={styles.saleCredit}>+ {s.credit}</div>
+                  <div className={styles.saleCredit}>+ {formatBRLFull(s.credit)}</div>
                   <div className={styles.saleRate}>
-                    {s.rate} · {s.tier}
+                    {Math.round((s.credit / s.value) * 100)}% · {s.level}
                   </div>
                 </div>
               </div>
             ))}
+            {sales?.length === 0 && <div className={styles.loading}>Nenhuma venda ainda.</div>}
           </div>
         )}
       </div>

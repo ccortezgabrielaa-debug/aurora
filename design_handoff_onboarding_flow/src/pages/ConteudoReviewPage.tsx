@@ -1,3 +1,4 @@
+import { useEffect, useState } from 'react';
 import { Navigate, useNavigate, useParams } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { DarkPanelHeader, BackRow } from '../components/DarkPanelHeader';
@@ -6,52 +7,73 @@ import { MediaPlaceholder } from '../components/MediaPlaceholder';
 import { StatusBadge } from '../components/StatusBadge';
 import { ToastView } from '../components/Toast';
 import { useContentQueue } from '../context/ContentQueueContext';
-import { CONTENT_QUEUE, CONTENT_STATUS_META } from '../data/contentQueue';
+import { fetchContentItem, rejectContent, validateContent, STATUS_META, type ContentQueueItem } from '../lib/queries/content';
+import { initials } from '../data/ambassadors';
+import { avatarColorFor } from '../lib/avatarColor';
 import styles from './ConteudoReviewPage.module.css';
 
 export function ConteudoReviewPage() {
-  const { idx: idxParam } = useParams<{ idx: string }>();
+  const { idx: id } = useParams<{ idx: string }>();
   const navigate = useNavigate();
-  const { statusFor, setStatus, toast, flash } = useContentQueue();
+  const { reload, flash, toast } = useContentQueue();
+  const [item, setItem] = useState<ContentQueueItem | null | undefined>(undefined);
+  const [busy, setBusy] = useState(false);
 
-  const idx = Number(idxParam);
-  const item = CONTENT_QUEUE[idx];
-  if (!item) return <Navigate to="/conteudo" replace />;
+  useEffect(() => {
+    if (!id) return;
+    fetchContentItem(id).then(setItem);
+  }, [id]);
 
-  const status = statusFor(idx);
-  const meta = CONTENT_STATUS_META[status];
+  if (item === null) return <Navigate to="/conteudo" replace />;
+  if (item === undefined) {
+    return (
+      <Screen>
+        <div style={{ flex: 1, display: 'flex', alignItems: 'center', justifyContent: 'center', color: 'var(--au-taupe)', font: '600 13px var(--au-font-text)' }}>
+          Carregando…
+        </div>
+      </Screen>
+    );
+  }
+
+  const meta = STATUS_META[item.status];
+  const { row } = item;
 
   const detection = [
-    { label: 'Marca @aurora.studio marcada', ok: item.brand },
-    { label: `Cupom ${item.coupon} no texto`, ok: item.couponOk },
-    { label: 'Conta do Instagram conectada', ok: item.connected },
+    { label: 'Marca mencionada', ok: row.checklist_mentioned_brand },
+    { label: item.coupon ? `Cupom ${item.coupon} no texto` : 'Cupom no texto', ok: row.checklist_coupon_visible },
+    { label: 'Permanência mínima cumprida', ok: row.checklist_min_days_live },
   ];
 
   const ringColor =
-    status === 'removido' ? '#c05a4e' : status === 'validado' ? '#5a8f6a' : status === 'revisar' ? '#9a8fb0' : '#c67d88';
-  const permaTitle = item.cat === 'story' ? 'Story · 24h no ar' : 'Post no feed · 30 dias';
-  const creditNote =
-    status === 'validado'
-      ? 'Liberado automaticamente ao concluir a permanência.'
-      : status === 'monitorando'
-        ? 'Libera sozinho quando a janela fechar.'
-        : status === 'removido'
-          ? 'Removido antes do prazo — crédito não liberado.'
-          : 'Marque manualmente após confirmar a marcação.';
+    item.status === 'removido' ? '#c05a4e' : item.status === 'validado' ? '#5a8f6a' : item.status === 'revisar' ? '#9a8fb0' : '#c67d88';
+  const showActions = item.status === 'monitorando' || item.status === 'revisar';
+  const showResolved = item.status === 'validado' || item.status === 'removido';
 
-  const showActions = status === 'monitorando' || status === 'revisar';
-  const showResolved = status === 'validado' || status === 'removido';
-
-  function validate() {
-    if (status !== 'revisar') return;
-    setStatus(idx, 'validado');
-    flash(`${item.name} validada · +R$ ${item.credit}`, '✓');
+  async function validate() {
+    if (item!.status !== 'revisar' || busy) return;
+    setBusy(true);
+    const { error, credit } = await validateContent(item!);
+    setBusy(false);
+    if (error) {
+      flash('Erro ao validar: ' + error, '✕');
+      return;
+    }
+    flash(`${item!.ambassadorName} validada · +R$ ${credit}`, '✓');
+    await reload();
     navigate('/conteudo');
   }
 
-  function reject() {
-    setStatus(idx, 'removido');
-    flash(`${item.name} — conteúdo reprovado`, '✕');
+  async function reject() {
+    if (busy) return;
+    setBusy(true);
+    const { error } = await rejectContent(item!.row.id);
+    setBusy(false);
+    if (error) {
+      flash('Erro ao reprovar: ' + error, '✕');
+      return;
+    }
+    flash(`${item!.ambassadorName} — conteúdo reprovado`, '✕');
+    await reload();
     navigate('/conteudo');
   }
 
@@ -60,11 +82,11 @@ export function ConteudoReviewPage() {
       <DarkPanelHeader>
         <BackRow onBack={() => navigate('/conteudo')} backLabel="Voltar" title="Detalhe do conteúdo" />
         <div className={styles.identityRow}>
-          <Avatar initials={item.initials} bg={item.avatarBg} size={40} />
+          <Avatar initials={initials(item.ambassadorName)} bg={avatarColorFor(item.ambassadorId)} size={40} />
           <div>
-            <div className={styles.name}>{item.name}</div>
+            <div className={styles.name}>{item.ambassadorName}</div>
             <div className={styles.meta}>
-              {item.type} · {item.date} · cupom {item.coupon}
+              {row.content_type} · {row.publish_date} {item.coupon ? `· cupom ${item.coupon}` : ''}
             </div>
           </div>
         </div>
@@ -74,22 +96,23 @@ export function ConteudoReviewPage() {
         <div className={styles.hero}>
           <MediaPlaceholder label="mídia detectada no Instagram" radius={18} />
         </div>
-        <p className={styles.caption}>{item.caption}</p>
+        {row.link && (
+          <p className={styles.caption}>
+            <a href={row.link} target="_blank" rel="noreferrer">
+              {row.link}
+            </a>
+          </p>
+        )}
 
         <div className={styles.sectionLabel}>Detecção automática</div>
         <div className={styles.detectionList}>
           {detection.map((d, i) => (
             <div key={i} className={styles.detectionRow}>
-              <span
-                className={styles.detectionMark}
-                style={{ background: d.ok ? '#5a8f6a' : '#c05a4e' }}
-              >
+              <span className={styles.detectionMark} style={{ background: d.ok ? '#5a8f6a' : '#c05a4e' }}>
                 {d.ok ? '✓' : '!'}
               </span>
               <span className={styles.detectionLabel}>{d.label}</span>
-              <span style={{ font: '600 10px var(--au-font-text)', color: d.ok ? '#5a8f6a' : '#c05a4e' }}>
-                {d.ok ? 'ok' : 'faltando'}
-              </span>
+              <span style={{ font: '600 10px var(--au-font-text)', color: d.ok ? '#5a8f6a' : '#c05a4e' }}>{d.ok ? 'ok' : 'faltando'}</span>
             </div>
           ))}
         </div>
@@ -98,11 +121,11 @@ export function ConteudoReviewPage() {
         <div className={styles.permaCard}>
           <div className={styles.ring} style={{ background: `conic-gradient(${ringColor} ${item.pct}%, #efe7dc 0)` }}>
             <div className={styles.ringInner}>
-              <div className={styles.ringPct}>{Math.round(item.pct)}%</div>
+              <div className={styles.ringPct}>{item.pct}%</div>
             </div>
           </div>
           <div style={{ flex: 1 }}>
-            <div className={styles.permaTitle}>{permaTitle}</div>
+            <div className={styles.permaTitle}>{item.reqLabel}</div>
             <div className={styles.permaSub}>{item.elapsedLabel}</div>
             <div style={{ marginTop: 8, display: 'inline-block' }}>
               <StatusBadge label={meta.label} bg={meta.bg} fg={meta.fg} size="md" />
@@ -113,28 +136,37 @@ export function ConteudoReviewPage() {
         <div className={styles.creditCard}>
           <div>
             <div className={styles.creditLabel}>Crédito</div>
-            <div className={styles.creditValue}>R$ {item.credit}</div>
+            <div className={styles.creditValue}>R$ {Math.round(Number(row.credit_generated))}</div>
           </div>
-          <div className={styles.creditNote}>{creditNote}</div>
+          <div className={styles.creditNote}>
+            {item.status === 'validado'
+              ? 'Liberado automaticamente ao concluir a permanência.'
+              : item.status === 'monitorando'
+                ? 'Libera sozinho quando a janela fechar.'
+                : item.status === 'removido'
+                  ? 'Removido antes do prazo — crédito não liberado.'
+                  : 'Marque manualmente após confirmar a marcação.'}
+          </div>
         </div>
       </div>
 
       <div className={styles.footer}>
         {showActions && (
           <div className={styles.actionsRow}>
-            <button type="button" className={styles.rejectBtn} onClick={reject}>
+            <button type="button" className={styles.rejectBtn} onClick={reject} disabled={busy}>
               ✕
             </button>
             <button
               type="button"
               className={styles.validateBtn}
               onClick={validate}
+              disabled={busy}
               style={{
-                color: status === 'revisar' ? 'var(--au-ink)' : '#b7ab9e',
-                background: status === 'revisar' ? '#a7d3a5' : '#e6decd',
+                color: item.status === 'revisar' ? 'var(--au-ink)' : '#b7ab9e',
+                background: item.status === 'revisar' ? '#a7d3a5' : '#e6decd',
               }}
             >
-              {status === 'revisar' ? 'Validar manualmente' : 'Aguardando permanência'}
+              {item.status === 'revisar' ? 'Validar manualmente' : 'Aguardando permanência'}
             </button>
           </div>
         )}
@@ -142,11 +174,11 @@ export function ConteudoReviewPage() {
           <div
             className={styles.resolvedBox}
             style={{
-              color: status === 'validado' ? '#5a8f6a' : '#c05a4e',
-              background: status === 'validado' ? '#e3efe1' : '#f6dcd8',
+              color: item.status === 'validado' ? '#5a8f6a' : '#c05a4e',
+              background: item.status === 'validado' ? '#e3efe1' : '#f6dcd8',
             }}
           >
-            {status === 'validado' ? `✓ Crédito de R$ ${item.credit} liberado` : '✕ Conteúdo removido antes do prazo'}
+            {item.status === 'validado' ? `✓ Crédito de R$ ${Math.round(Number(row.credit_generated))} liberado` : '✕ Conteúdo removido antes do prazo'}
           </div>
         )}
       </div>

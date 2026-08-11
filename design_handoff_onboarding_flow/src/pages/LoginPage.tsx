@@ -3,6 +3,7 @@ import { Link, useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { AuroraMark } from '../components/AuroraMark';
 import { SegmentedControl } from '../components/SegmentedControl';
+import { supabase } from '../lib/supabase';
 import styles from './LoginPage.module.css';
 
 type Role = 'marca' | 'embaixadora';
@@ -35,8 +36,32 @@ export function LoginPage() {
   const [role, setRole] = useState<Role>('marca');
   const [email, setEmail] = useState('');
   const [pass, setPass] = useState('');
+  const [submitting, setSubmitting] = useState(false);
+  const [error, setError] = useState<string | null>(null);
   const copy = ROLE_COPY[role];
   const isMarca = role === 'marca';
+
+  async function handleSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    setError(null);
+    setSubmitting(true);
+    const { data, error: signInError } = await supabase.auth.signInWithPassword({
+      email: email.trim(),
+      password: pass,
+    });
+    if (signInError || !data.user) {
+      setSubmitting(false);
+      setError('E-mail ou senha incorretos.');
+      return;
+    }
+    const { data: profile } = await supabase.from('profiles').select('role').eq('id', data.user.id).maybeSingle();
+    setSubmitting(false);
+    if (!profile) {
+      setError('Conta sem workspace vinculado ainda — finalize o onboarding.');
+      return;
+    }
+    navigate(profile.role === 'ambassador' ? '/portal' : '/dashboard');
+  }
 
   return (
     <Screen>
@@ -67,13 +92,7 @@ export function LoginPage() {
 
         <p className={styles.blurb}>{copy.blurb}</p>
 
-        <form
-          className={styles.form}
-          onSubmit={(e) => {
-            e.preventDefault();
-            navigate(isMarca ? '/dashboard' : '/portal');
-          }}
-        >
+        <form className={styles.form} onSubmit={handleSubmit}>
           <input
             className={styles.input}
             type="email"
@@ -90,15 +109,19 @@ export function LoginPage() {
             onChange={(e) => setPass(e.target.value)}
             autoComplete="current-password"
           />
+          {error && (
+            <span style={{ font: '600 12px var(--au-font-text)', color: '#c96a5e' }}>{error}</span>
+          )}
           <button
             type="submit"
             className={styles.primaryBtn}
+            disabled={submitting}
             style={{
               color: isMarca ? '#fff' : 'var(--au-ink)',
               background: isMarca ? 'var(--au-ink)' : 'var(--au-rose)',
             }}
           >
-            Entrar como {copy.roleShort}
+            {submitting ? 'Entrando…' : `Entrar como ${copy.roleShort}`}
           </button>
           <button type="button" className={styles.googleBtn}>
             <span className={styles.googleG}>G</span> Continuar com Google

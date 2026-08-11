@@ -45,6 +45,13 @@
   margin-top: 4px;
 }
 
+.loading {
+  text-align: center;
+  padding: 40px 20px;
+  font: 500 13px var(--au-font-text);
+  color: var(--au-taupe);
+}
+
 .couponRow,
 .saleRow {
   background: #fff;
