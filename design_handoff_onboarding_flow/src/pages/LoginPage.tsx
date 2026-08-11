@@ -41,6 +41,11 @@ export function LoginPage() {
   return (
     <Screen>
       <div className={styles.hero}>
+        <img
+          className={styles.heroImg}
+          src="/hero-embaixadoras.jpg"
+          alt="Embaixadoras aurora sorrindo com pele radiante"
+        />
         <div className={styles.heroScrim} />
         <div className={styles.heroContent}>
           <div className={styles.wordmarkRow}>
