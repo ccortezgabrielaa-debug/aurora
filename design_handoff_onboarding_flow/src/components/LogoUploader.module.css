@@ -1,0 +1,37 @@
+.wrap {
+  display: flex;
+  justify-content: center;
+}
+
+.circle {
+  width: 88px;
+  height: 88px;
+  border-radius: 50%;
+  border: 2px dashed #d9b9c0;
+  background: #faf1f0;
+  overflow: hidden;
+  padding: 0;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.circle[data-filled] {
+  border-style: solid;
+}
+
+.img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.placeholder {
+  font: 600 10px var(--au-font-text);
+  letter-spacing: 0.4px;
+  color: var(--au-rose-deep);
+  text-transform: lowercase;
+  padding: 0 8px;
+  text-align: center;
+}

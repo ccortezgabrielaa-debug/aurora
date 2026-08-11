@@ -1,0 +1,126 @@
+.step {
+  flex: 1;
+  min-height: 0;
+  overflow-y: auto;
+  padding: 24px 28px 28px;
+  box-sizing: border-box;
+  display: flex;
+  flex-direction: column;
+  animation: auEnter 0.35s ease both;
+}
+
+.topRow {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.backBtn {
+  width: 40px;
+  height: 40px;
+  border-radius: 13px;
+  border: 1.5px solid #e2d8cd;
+  background: transparent;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 19px;
+  color: var(--au-ink);
+  cursor: pointer;
+  padding: 0;
+}
+
+.backBtnSpacer {
+  width: 40px;
+}
+
+.header {
+  margin-top: 20px;
+}
+
+.kicker {
+  font: 600 10px var(--au-font-text);
+  letter-spacing: 2.5px;
+  text-transform: uppercase;
+  color: var(--au-rose-deep);
+}
+
+.title {
+  font: 700 26px/1.15 var(--au-font-display);
+  color: var(--au-ink);
+  margin-top: 8px;
+}
+
+.subtitle {
+  font: 500 13px/1.5 var(--au-font-text);
+  color: var(--au-taupe-soft);
+  margin-top: 8px;
+}
+
+.fields {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+  margin-top: 22px;
+}
+
+.field {
+  display: flex;
+  flex-direction: column;
+}
+
+.fieldLabel {
+  font: 600 10px var(--au-font-text);
+  letter-spacing: 1.5px;
+  text-transform: uppercase;
+  color: var(--au-taupe);
+  margin-bottom: 6px;
+}
+
+.input {
+  width: 100%;
+  box-sizing: border-box;
+  background: #fff;
+  border: 1.5px solid var(--au-sand-border);
+  border-radius: 14px;
+  padding: 14px 15px;
+  font: 500 14px var(--au-font-text);
+  color: var(--au-ink);
+}
+
+.input[data-invalid='true'] {
+  border-color: var(--au-error);
+}
+
+.inputEmphasis {
+  border-color: var(--au-rose);
+  font: 600 15px var(--au-font-display);
+  box-shadow: 0 0 0 3px rgba(234, 180, 191, 0.2);
+}
+
+.fieldError {
+  font: 600 11px var(--au-font-text);
+  color: var(--au-error);
+  margin-top: 6px;
+}
+
+.spacer {
+  flex: 1;
+}
+
+.primaryBtn {
+  background: var(--au-rose);
+  color: var(--au-ink);
+  font: 700 15px var(--au-font-text);
+  text-align: center;
+  padding: 17px;
+  border-radius: 16px;
+  border: 0;
+  cursor: pointer;
+  width: 100%;
+}
+
+.darkBtn {
+  background: var(--au-ink);
+  color: #fff;
+}

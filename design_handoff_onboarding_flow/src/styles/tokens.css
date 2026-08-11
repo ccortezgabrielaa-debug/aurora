@@ -1,0 +1,41 @@
+/*
+  Aurora Rosé — brand tokens
+  Source: Aurora_Identidade.dc.html (option 1b), applied consistently across
+  Aurora_Login / Aurora_Onboarding / Aurora_Dashboard mockups.
+*/
+:root {
+  /* Palette */
+  --au-ink: #26211e; /* primary text / dark surfaces */
+  --au-ink-soft: #1c1a18; /* deepest surface (status bar / nav chrome) */
+  --au-rose: #eab4bf; /* brand accent — primary CTA, active states */
+  --au-rose-deep: #c67d88; /* links, kickers, active tab */
+  --au-rose-pale: #f4c3cc; /* accent on dark surfaces */
+  --au-cream: #f4efe8; /* app background / cards-on-dark text */
+  --au-cream-deep: #e9e3db; /* page background */
+  --au-sand: #ece2d7; /* input / segmented-control background */
+  --au-sand-border: #ece2d7;
+  --au-line: #efe7dc; /* card borders */
+  --au-taupe: #a89b90; /* muted labels / kickers */
+  --au-taupe-soft: #8c8078; /* muted body text */
+  --au-taupe-line: #b7ab9e; /* muted numerals / inactive tab */
+  --au-success: #5a8f6a;
+  --au-error: #c96a5e;
+  --au-tier-nano-bg: #efe7dc;
+  --au-tier-nano-fg: #8c8078;
+  --au-tier-micro-bg: #f7dbe0;
+  --au-tier-micro-fg: #b45f6c;
+  --au-tier-macro-bg: #26211e;
+  --au-tier-macro-fg: #f4c3cc;
+
+  /* Typography */
+  --au-font-display: 'Quicksand', system-ui, sans-serif;
+  --au-font-text: 'Manrope', system-ui, sans-serif;
+
+  /* Shape */
+  --au-radius-sm: 12px;
+  --au-radius-md: 16px;
+  --au-radius-lg: 22px;
+  --au-radius-xl: 28px;
+
+  color-scheme: light;
+}
