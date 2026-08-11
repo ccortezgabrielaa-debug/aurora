@@ -56,8 +56,8 @@ export function DashboardPage() {
 
       <div className={`au-scroll ${styles.body}`}>
         <div className={styles.kpiGrid}>
-          <KpiCard label="Embaixadoras ativas" value={k.ativas} caption={`↑ ${k.ativasDelta} no período`} tone="up" />
-          <KpiCard label="GMV via cupom" value={k.gmv} caption={`↑ ${k.gmvDelta}`} tone="up" size="sm" />
+          <KpiCard label="Embaixadoras ativas" value={k.ativas} caption="sem dados no período" tone="muted" />
+          <KpiCard label="GMV via cupom" value={k.gmv} caption="sem dados no período" tone="muted" size="sm" />
           <KpiCard label="Taxa de resgate" value={k.resgate} caption="do crédito gerado" tone="muted" />
           <KpiCard label="Ativação → venda" value={k.conv} caption="conversão" tone="muted" />
         </div>
@@ -82,11 +82,17 @@ export function DashboardPage() {
             Ver tudo
           </button>
         </div>
-        <div className={styles.rankingList}>
-          {RANKING.map((a, i) => (
-            <RankingRow key={a.handle} rank={i + 1} ambassador={a} />
-          ))}
-        </div>
+        {RANKING.length > 0 ? (
+          <div className={styles.rankingList}>
+            {RANKING.map((a, i) => (
+              <RankingRow key={a.handle} rank={i + 1} ambassador={a} />
+            ))}
+          </div>
+        ) : (
+          <div className={styles.emptyState}>
+            Ainda não há embaixadoras com pontuação. Os dados aparecem aqui assim que as primeiras vendas forem registradas.
+          </div>
+        )}
 
         <div className={styles.sectionHead}>
           <div className={styles.sectionTitle}>Acessos rápidos</div>

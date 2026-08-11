@@ -30,40 +30,22 @@ export const PERIOD_LABELS: Record<Period, string> = {
   '90d': '90 dias',
 };
 
+const EMPTY_KPIS: PeriodKpis = {
+  ativas: '0',
+  ativasDelta: '0',
+  gmv: 'R$ 0',
+  gmvDelta: '0%',
+  resgate: '0%',
+  conv: '0%',
+  budgetUsed: 'R$ 0',
+  budgetCap: 'R$ 0',
+  budgetPct: '0%',
+};
+
 export const PERIOD_DATA: Record<Period, PeriodKpis> = {
-  '7d': {
-    ativas: '24',
-    ativasDelta: '+3',
-    gmv: 'R$ 38,2k',
-    gmvDelta: '+12%',
-    resgate: '54%',
-    conv: '31%',
-    budgetUsed: 'R$ 1.180',
-    budgetCap: 'R$ 4.000',
-    budgetPct: '30%',
-  },
-  '30d': {
-    ativas: '31',
-    ativasDelta: '+7',
-    gmv: 'R$ 142,6k',
-    gmvDelta: '+23%',
-    resgate: '61%',
-    conv: '38%',
-    budgetUsed: 'R$ 5.240',
-    budgetCap: 'R$ 16.000',
-    budgetPct: '33%',
-  },
-  '90d': {
-    ativas: '38',
-    ativasDelta: '+14',
-    gmv: 'R$ 402,9k',
-    gmvDelta: '+41%',
-    resgate: '58%',
-    conv: '35%',
-    budgetUsed: 'R$ 14.900',
-    budgetCap: 'R$ 48.000',
-    budgetPct: '31%',
-  },
+  '7d': { ...EMPTY_KPIS },
+  '30d': { ...EMPTY_KPIS },
+  '90d': { ...EMPTY_KPIS },
 };
 
 export type Tier = 'nano' | 'micro' | 'macro';
@@ -77,13 +59,7 @@ export type Ambassador = {
   avatarBg: string;
 };
 
-export const RANKING: Ambassador[] = [
-  { name: 'Marina Duarte', handle: '@marinaduarte', tier: 'macro', score: 948, gmv: 'R$ 61,4k', avatarBg: '#c98a94' },
-  { name: 'Bia Rocha', handle: '@biarocha', tier: 'micro', score: 812, gmv: 'R$ 34,7k', avatarBg: '#b5a07f' },
-  { name: 'Clara Nunes', handle: '@claranunes', tier: 'micro', score: 733, gmv: 'R$ 28,1k', avatarBg: '#8fa88a' },
-  { name: 'Duda Freitas', handle: '@dudafreitas', tier: 'nano', score: 611, gmv: 'R$ 19,9k', avatarBg: '#c2917a' },
-  { name: 'Helena Sá', handle: '@helenasa', tier: 'nano', score: 540, gmv: 'R$ 14,3k', avatarBg: '#9a8fb0' },
-];
+export const RANKING: Ambassador[] = [];
 
 export const TIER_STYLE: Record<Tier, { bg: string; fg: string; label: string }> = {
   nano: { bg: 'var(--au-tier-nano-bg)', fg: 'var(--au-tier-nano-fg)', label: 'nano' },
