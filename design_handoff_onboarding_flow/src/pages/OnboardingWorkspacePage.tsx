@@ -7,19 +7,40 @@ import { ColorSwatchPicker } from '../components/ColorSwatchPicker';
 import { useOnboarding } from '../context/OnboardingContext';
 import { useAuth } from '../context/AuthContext';
 import { supabase } from '../lib/supabase';
+import { fetchInstagramProfile, normalizeHandle, type InstagramProfileData } from '../lib/instagram';
 import styles from './OnboardingStep.module.css';
 
 const BRAND_SWATCHES = ['#eab4bf', '#c98a94', '#b5c4b0', '#c9b79a', '#26211e'];
+const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
 export function OnboardingWorkspacePage() {
   const navigate = useNavigate();
   const { session, loading: authLoading } = useAuth();
-  const { state, setBrand, setColor, setLogoUrl } = useOnboarding();
+  const { state, setBrand, setBillingEmail, setCnpj, setInstagramHandle, setColor, setLogoUrl } = useOnboarding();
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [igLoading, setIgLoading] = useState(false);
+  const [igNotice, setIgNotice] = useState<string | null>(null);
+  const [igProfile, setIgProfile] = useState<InstagramProfileData | null>(null);
 
   if (!authLoading && !session) {
     return <Navigate to="/onboarding/signup" replace />;
+  }
+
+  async function handleFetchInstagram() {
+    if (!state.instagramHandle.trim()) return;
+    setIgLoading(true);
+    setIgNotice(null);
+    setIgProfile(null);
+    try {
+      const profile = await fetchInstagramProfile(state.instagramHandle);
+      setIgProfile(profile);
+      if (profile.profilePicUrl) setLogoUrl(profile.profilePicUrl);
+    } catch (err) {
+      setIgNotice(err instanceof Error ? err.message : 'Não foi possível buscar os dados do Instagram agora.');
+    } finally {
+      setIgLoading(false);
+    }
   }
 
   async function handleSubmit(e: React.FormEvent) {
@@ -34,7 +55,13 @@ export function OnboardingWorkspacePage() {
     // because a brand-new user has no profile yet, so no SELECT policy on `brands` can see
     // the row it just inserted — RLS still lets the INSERT through, but RETURNING it fails.
     const brandId = crypto.randomUUID();
-    const { error: brandError } = await supabase.from('brands').insert({ id: brandId, name: state.brand.trim() });
+    const { error: brandError } = await supabase.from('brands').insert({
+      id: brandId,
+      name: state.brand.trim(),
+      billing_email: state.billingEmail.trim() || null,
+      cnpj: state.cnpj.trim() || null,
+      instagram_handle: state.instagramHandle.trim() ? normalizeHandle(state.instagramHandle) : null,
+    });
 
     if (brandError) {
       setSubmitting(false);
@@ -110,6 +137,68 @@ export function OnboardingWorkspacePage() {
               onChange={(e) => setBrand(e.target.value)}
             />
           </label>
+
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>E-mail da marca</span>
+            <input
+              className={styles.input}
+              data-invalid={state.billingEmail.trim() !== '' && !EMAIL_RE.test(state.billingEmail.trim())}
+              type="email"
+              placeholder="contato@suamarca.com"
+              value={state.billingEmail}
+              onChange={(e) => setBillingEmail(e.target.value)}
+              autoComplete="email"
+            />
+          </label>
+
+          <label className={styles.field}>
+            <span className={styles.fieldLabel}>CNPJ</span>
+            <input
+              className={styles.input}
+              placeholder="00.000.000/0000-00"
+              value={state.cnpj}
+              onChange={(e) => setCnpj(e.target.value)}
+              inputMode="numeric"
+            />
+          </label>
+
+          <div className={styles.field}>
+            <span className={styles.fieldLabel}>Instagram da marca</span>
+            <div className={styles.inputRow}>
+              <input
+                className={styles.input}
+                placeholder="@suamarca"
+                value={state.instagramHandle}
+                onChange={(e) => {
+                  setInstagramHandle(e.target.value);
+                  setIgProfile(null);
+                  setIgNotice(null);
+                }}
+              />
+              <button
+                type="button"
+                className={styles.fetchBtn}
+                disabled={!state.instagramHandle.trim() || igLoading}
+                onClick={handleFetchInstagram}
+              >
+                {igLoading ? 'Buscando…' : 'Buscar dados'}
+              </button>
+            </div>
+            {igNotice && <p className={styles.igHint}>{igNotice}</p>}
+            {igProfile && (
+              <div className={styles.igPreview}>
+                {igProfile.profilePicUrl && (
+                  <img className={styles.igPreviewAvatar} src={igProfile.profilePicUrl} alt="" />
+                )}
+                <div>
+                  <div className={styles.igPreviewName}>{igProfile.fullName ?? igProfile.handle}</div>
+                  {igProfile.followers != null && (
+                    <div className={styles.igPreviewMeta}>{igProfile.followers.toLocaleString('pt-BR')} seguidores</div>
+                  )}
+                </div>
+              </div>
+            )}
+          </div>
 
           <div className={styles.field}>
             <span className={styles.fieldLabel} style={{ marginBottom: 8 }}>

@@ -64,6 +64,7 @@ export type Database = {
           cnpj: string | null;
           created_at: string;
           id: string;
+          instagram_handle: string | null;
           legal_name: string | null;
           legal_rep_name: string | null;
           legal_rep_role: string | null;
@@ -86,6 +87,7 @@ export type Database = {
           cnpj?: string | null;
           created_at?: string;
           id?: string;
+          instagram_handle?: string | null;
           legal_name?: string | null;
           legal_rep_name?: string | null;
           legal_rep_role?: string | null;
@@ -108,6 +110,7 @@ export type Database = {
           cnpj?: string | null;
           created_at?: string;
           id?: string;
+          instagram_handle?: string | null;
           legal_name?: string | null;
           legal_rep_name?: string | null;
           legal_rep_role?: string | null;

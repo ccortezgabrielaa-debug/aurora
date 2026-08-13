@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { Screen } from '../components/Screen';
 import { BackHeader } from '../components/BackHeader';
 import { createAmbassadorAccount } from '../lib/functions';
+import { fetchInstagramProfile, type InstagramProfileData } from '../lib/instagram';
 import styles from './EmbaixadoraNewPage.module.css';
 
 const LEVELS: { value: 'nano' | 'micro' | 'macro'; label: string }[] = [
@@ -27,6 +28,25 @@ export function EmbaixadoraNewPage() {
   const [submitting, setSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [done, setDone] = useState<{ email: string; password: string } | null>(null);
+  const [igLoading, setIgLoading] = useState(false);
+  const [igNotice, setIgNotice] = useState<string | null>(null);
+  const [igProfile, setIgProfile] = useState<InstagramProfileData | null>(null);
+
+  async function handleFetchInstagram() {
+    if (!handle.trim()) return;
+    setIgLoading(true);
+    setIgNotice(null);
+    setIgProfile(null);
+    try {
+      const profile = await fetchInstagramProfile(handle);
+      setIgProfile(profile);
+      if (profile.fullName && !name.trim()) setName(profile.fullName);
+    } catch (err) {
+      setIgNotice(err instanceof Error ? err.message : 'Não foi possível buscar os dados do Instagram agora.');
+    } finally {
+      setIgLoading(false);
+    }
+  }
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -96,7 +116,39 @@ export function EmbaixadoraNewPage() {
           <label className={styles.fieldLabel} htmlFor="nea-handle">
             @ do Instagram
           </label>
-          <input id="nea-handle" className={styles.input} value={handle} onChange={(e) => setHandle(e.target.value)} placeholder="@marinaduarte" />
+          <div className={styles.inputRow}>
+            <input
+              id="nea-handle"
+              className={styles.input}
+              value={handle}
+              onChange={(e) => {
+                setHandle(e.target.value);
+                setIgProfile(null);
+                setIgNotice(null);
+              }}
+              placeholder="@marinaduarte"
+            />
+            <button
+              type="button"
+              className={styles.fetchBtn}
+              disabled={!handle.trim() || igLoading}
+              onClick={handleFetchInstagram}
+            >
+              {igLoading ? 'Buscando…' : 'Buscar dados'}
+            </button>
+          </div>
+          {igNotice && <p className={styles.igHint}>{igNotice}</p>}
+          {igProfile && (
+            <div className={styles.igPreview}>
+              {igProfile.profilePicUrl && <img className={styles.igPreviewAvatar} src={igProfile.profilePicUrl} alt="" />}
+              <div>
+                <div className={styles.igPreviewName}>{igProfile.fullName ?? igProfile.handle}</div>
+                {igProfile.followers != null && (
+                  <div className={styles.igPreviewMeta}>{igProfile.followers.toLocaleString('pt-BR')} seguidores</div>
+                )}
+              </div>
+            </div>
+          )}
         </div>
         <div className={styles.field}>
           <label className={styles.fieldLabel} htmlFor="nea-email">

@@ -59,6 +59,27 @@ no projeto. Duas migrações foram adicionadas por este trabalho:
   `credit_balance` e `score`; reusada pelo Dashboard, Embaixadoras e Portal.
   Por ser `security_invoker`, a RLS das tabelas de origem se aplica
   normalmente a quem consulta — nenhuma policy própria foi necessária.
+- `brands_instagram_handle` — coluna `instagram_handle` em `brands`, para o
+  cadastro de onboarding (ver abaixo).
+
+### Cadastro de marca e busca automática de Instagram
+
+O onboarding (`/onboarding/workspace`) coleta, além do nome da marca:
+**e-mail (`billing_email`)**, **CNPJ (`cnpj`)** e **@ do Instagram
+(`instagram_handle`)** — todos opcionais, salvos direto em `brands`. O mesmo
+campo de @ do Instagram existe no cadastro de embaixadora
+(`/embaixadoras/nova`, coluna `ambassadors.handle`, já existente no schema).
+
+Os dois formulários têm um botão **"Buscar dados"** ao lado do campo de
+Instagram, que chama `fetchInstagramProfile()`
+(`src/lib/instagram.ts`) — a fonte de dados escolhida para essa busca é o
+**Windsor.ai**. A função já está com a assinatura e o fluxo de UI prontos
+(estado de carregando, card de prévia com nome/seguidores/foto, preenchimento
+automático de campos quando a busca funciona), mas a chamada real à API do
+Windsor.ai depende do conector estar autorizado nesta conta do claude.ai —
+enquanto isso não acontece, a função falha de propósito com uma mensagem
+amigável ("busca automática indisponível") e o cadastro segue funcionando
+normalmente só com o @ digitado manualmente.
 
 ### Dados derivados (não há tabela de KPI pronta)
 

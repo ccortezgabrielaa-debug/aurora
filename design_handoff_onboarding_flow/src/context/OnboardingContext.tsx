@@ -5,6 +5,9 @@ export type OnboardingState = {
   email: string;
   pass: string;
   brand: string;
+  billingEmail: string;
+  cnpj: string;
+  instagramHandle: string;
   color: string;
   logoUrl: string | null;
 };
@@ -15,6 +18,9 @@ type OnboardingContextValue = {
   setEmail: (v: string) => void;
   setPass: (v: string) => void;
   setBrand: (v: string) => void;
+  setBillingEmail: (v: string) => void;
+  setCnpj: (v: string) => void;
+  setInstagramHandle: (v: string) => void;
   setColor: (v: string) => void;
   setLogoUrl: (v: string | null) => void;
   reset: () => void;
@@ -25,6 +31,9 @@ const INITIAL_STATE: OnboardingState = {
   email: '',
   pass: '',
   brand: 'Aurora Studio',
+  billingEmail: '',
+  cnpj: '',
+  instagramHandle: '',
   color: '#eab4bf',
   logoUrl: null,
 };
@@ -41,6 +50,9 @@ export function OnboardingProvider({ children }: { children: ReactNode }) {
       setEmail: (email) => setState((s) => ({ ...s, email })),
       setPass: (pass) => setState((s) => ({ ...s, pass })),
       setBrand: (brand) => setState((s) => ({ ...s, brand })),
+      setBillingEmail: (billingEmail) => setState((s) => ({ ...s, billingEmail })),
+      setCnpj: (cnpj) => setState((s) => ({ ...s, cnpj })),
+      setInstagramHandle: (instagramHandle) => setState((s) => ({ ...s, instagramHandle })),
       setColor: (color) => setState((s) => ({ ...s, color })),
       setLogoUrl: (logoUrl) => setState((s) => ({ ...s, logoUrl })),
       reset: () => setState(INITIAL_STATE),
